@@ -1,53 +1,34 @@
-def gv
-
 pipeline {
     agent any
-    environment {
-        NEW_VERSION = "1.3.0"
-    }
-    parameters{
-        choice(name:"VERSION" , choices:["1.0.0" , "1.0.1" , "1.0.2"] , description:"")
-        booleanParam(name:"executeTest" , defaultValue:true , description : "")
+    tools {
+        maven 'maven-3.6'
     }
     stages {
-        stage("init") {
-            steps {
-                script {
-                    gv = load "script.groovy"
-                }
-            }
-        }
-        stage("test"){
-            when {
-                expression {
-                    params.executeTest
-                }
-            }
-            steps {
-                echo "executing tests"
-            }
-        }
         stage("build jar") {
             steps {
                 script {
-                    echo "building jar"
-                    echo "building image version ${NEW_VERSION}"
-                    //gv.buildJar()
+                    echo "building the app ..." 
+                    sh "mvn package"
                 }
             }
         }
         stage("build image") {
             steps {
                 script {
-                    echo "building image ${params.VERSION}"
-                    //gv.buildImage()
+                    echo "building the app ..." 
+                    //sh "mvn package"
                 }
             }
         }
         stage("deploy") {
             steps {
-                echo "deploying image "
+                script {
+                    withCredentials([usernamePassword(credentialsId :'github_credentials' , passwordVariable:'PWD' , usernameVariable:'USER')]){
+                        echo "deploying the app ..."  
+                        echo "${USER} ${PWD}"
+                    }
+                }
             }
         }
-    }   
+    }
 }
