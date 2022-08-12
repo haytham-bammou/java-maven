@@ -4,29 +4,31 @@ pipeline {
         maven 'maven-3.6'
     }
     stages {
+        stage("init") {
+            steps {
+                script {
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage("build jar") {
             steps {
                 script {
-                    echo "building the app ..." 
-                    sh "mvn package"
+                    gv.buildJar()
                 }
             }
         }
         stage("build image") {
             steps {
                 script {
-                    echo "building the app ..." 
-                    //sh "mvn package"
+                    gv.buildImage()
                 }
             }
         }
         stage("deploy") {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId :'github_credentials' , passwordVariable:'PWD' , usernameVariable:'USER')]){
-                        echo "deploying the app ..."  
-                        echo "${USER} ${PWD}"
-                    }
+                    gv.deployApp()
                 }
             }
         }
