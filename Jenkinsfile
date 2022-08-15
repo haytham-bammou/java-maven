@@ -1,3 +1,5 @@
+@Library('jenkins-shared-library')
+def gv
 pipeline {
     agent any
     tools {
@@ -19,35 +21,20 @@ pipeline {
             }
         }
         stage("build jar") {
-             when{
-                    expression {
-                        BRANCH_NAME == "master"       
-                    }
-                }
             steps {
                 script {
-                    gv.buildJar()
+                    buildJar()   
                 }
             }
         }
-        stage("build image") {
-             when{
-                    expression {
-                        BRANCH_NAME == "master"       
-                    }
-                }            
+        stage("build image") {            
             steps {
                 script {
-                    gv.buildImage()
+                    buildImage()
                 }
             }
         }
         stage("deploy") {
-             when{
-                    expression {
-                        BRANCH_NAME == "master"       
-                    }
-                }
             steps {
                 script {
                     gv.deployApp()
