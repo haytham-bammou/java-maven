@@ -26,7 +26,7 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    buildJar "${params.version}"   
+                    buildJar "haythambammou/my-repo:jma-2.0"   
                 }
             }
         }
