@@ -26,14 +26,14 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    buildJar "haythambammou/my-repo:jma-2.0"   
+                    buildJar()   
                 }
             }
         }
         stage("build image") {            
             steps {
                 script {
-                    buildImage()
+                    buildImage "${params.version}"
                 }
             }
         }
