@@ -5,6 +5,9 @@ pipeline {
     tools {
         maven 'maven-3.6'
     }
+    parameters{
+        text(name:"version" , defaultValue:"" , description : "")
+    }
     stages {
         stage("init") {
             steps {
@@ -23,7 +26,7 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    buildJar()   
+                    buildJar "${params.version}"   
                 }
             }
         }
